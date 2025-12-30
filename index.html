@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<!-- Coral Rescue: Missione Oasi - Gioco di Match-3 con tema marino -->
+<html lang="it">
+<head>
+    <!-- Configurazione Base del Documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Coral Rescue: Missione Oasi</title>
+    
+    <!-- LIBRERIE ESTERNE -->
+    <!-- Google Fonts: Font pixelato VT323 per lo stile retro -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS per utility class responsivi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CSS personalizzato per stili specifici del gioco -->
+    <link rel="stylesheet" href="style.css">
+    <!-- CSS per l'interfaccia utente -->
+    <link rel="stylesheet" href="ui.css">
+    
+</head>
+<body>
+
+    <!-- SEZIONE SFONDO ANIMATO -->
+    <!-- Background oceanico con griglia e gradiente, con bolle animate -->
+    <div class="ocean-bg" id="ocean-bg"></div>
+    <!-- Overlay di texture pixel per effetto vintage -->
+    <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzj//v37zaAAkYUJIAuAAgAkIg/yTzNlOQAAAABJRU5ErkJggg==') repeat; opacity:0.1; pointer-events:none; z-index:99;"></div>
+
+    <!-- SCHERMATA 1: MENU PRINCIPALE (HERO SCREEN) -->
+    <!-- Schermata iniziale con titolo, scena oceanica e pulsante START -->
+    <div id="screen-hero" class="screen active">
+        <!-- Titolo principale con effetti shadow -->
+        <h1 class="super-title text-center">CORAL<br>RESCUE</h1>
+        
+        <!-- Frame scenico con personaggi e decorazioni -->
+        <div class="hero-scene-frame mb-8">
+            <!-- Raggi di sole decorativi -->
+            <div class="scene-sun-rays"></div>
+            <!-- Pesce animato che rimbalza -->
+            <div class="absolute top-8 left-8 text-4xl animate-bounce" style="animation-duration: 3s;">🐠</div>
+            <!-- Bolle decorative che scompaiono -->
+            <div class="absolute top-12 right-12 text-2xl animate-pulse">🫧</div>
+            <div class="absolute top-4 left-1/2 text-xl opacity-50">🫧</div>
+            
+            <!-- Sabbia con elementi decorativi -->
+            <div class="scene-sand flex justify-center items-end pb-1 gap-4">
+                <!-- Coralli decorativi ai lati -->
+                <span class="text-3xl filter brightness-110">🪸</span>
+                <!-- Immagine corallo principale -->
+                <span class="text-4xl -mb-1"><img src="Coral_iniziale.png" alt="Coral" class="w-20 h-20"></span>
+                <!-- Conchiglia decorativa -->
+                <span class="text-2xl filter hue-rotate-15">🐚</span>
+                <!-- Corallo decorativo -->
+                <span class="text-3xl filter brightness-90">🪸</span>
+            </div>
+        </div>
+
+        <!-- Sezione pulsanti e testo -->
+        <div class="text-center">
+            <!-- Pulsante START principale -->
+            <button onclick="GameApp.startGame()" class="pixel-btn blink mb-4 bg-yellow-500 hover:bg-yellow-600 text-black" style="color: #f59e0b;">▶ START GAME</button>
+
+            <!-- Sottotitolo della missione -->
+            <p class="text-white text-lg opacity-80 mt-2 font-bold tracking-widest text-shadow-sm">MISSIONE OASI</p>
+            <!-- Pulsante impostazioni -->
+            <button onclick="GameApp.showScreen('settings')" class="mt-6 text-2xl hover:scale-110 transition-transform text-white p-2 rounded-lg shadow-lg" title="Impostazioni">⚙️</button>
+        </div>
+    <!-- Footer con copyright -->
+     <div class=" text-center absolute bottom-4 text-[#e6d6ac] text-sm">© 2025 Cozy Ocean Studios</div> </div>
+
+
+    <!-- SCHERMATA 2: PROFILO UTENTE -->
+    <!-- Permette al giocatore di scegliere username e avatar -->
+    <div id="screen-profile" class="screen">
+        <div class="pixel-box p-6 max-w-2xl w-full flex flex-col items-center gap-6 relative bg-[#fffbf0]">
+            <!-- Titolo sezione profilo -->
+            <h2 class="text-4xl font-bold text-[#051b29] border-b-4 border-[#1d6b87] pb-2 w-full text-center">CREA IL TUO PROFILO</h2>
+            
+            <!-- Input username -->
+            <div class="w-full max-w-md">
+                <label class="block text-xl font-bold text-[#0f3854] mb-2">Nome Esploratore:</label>
+                <input type="text" id="username-input" placeholder="Scrivi il tuo nome..." class="w-full px-4 py-3 border-4 border-[#051b29] font-bold text-lg text-[#0f3854] placeholder-gray-400" maxlength="20">
+            </div>
+
+            <!-- Seleziona avatar -->
+            <div class="w-full">
+                <label class="block text-xl font-bold text-[#0f3854] mb-3">Scegli il tuo Avatar:</label>
+                
+                <!-- SEZIONE AVATAR ROSSI/CALDI -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-red-600 mb-2 uppercase">🔴 Rossi/Caldi:</h3>
+                    <div class="grid grid-cols-4 gap-2 bg-red-50 border-2 border-red-300 p-3">
+                        <button onclick="GameApp.selectAvatar('🦀')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-red-500 transition-all" title="Granchio Rosso">🦀</button>
+                        <button onclick="GameApp.selectAvatar('🦐')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-red-500 transition-all" title="Gamberetto">🦐</button>
+                        <button onclick="GameApp.selectAvatar('🦞')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-red-500 transition-all" title="Aragosta">🦞</button>
+                    </div>
+                </div>
+
+                <!-- SEZIONE AVATAR BLU/FREDDI -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-blue-600 mb-2 uppercase">🔵 Blu/Freddi:</h3>
+                    <div class="grid grid-cols-4 gap-2 bg-blue-50 border-2 border-blue-300 p-3">
+                        <button onclick="GameApp.selectAvatar('🐳')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-blue-500 transition-all" title="Balena">🐳</button>
+                        <button onclick="GameApp.selectAvatar('🐋')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-blue-500 transition-all" title="Balena Gigante">🐋</button>
+                        <button onclick="GameApp.selectAvatar('🐡')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-blue-500 transition-all" title="Pesce Palla">🐡</button>
+                        <button onclick="GameApp.selectAvatar('🌊')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-blue-500 transition-all" title="Onda del Mare">🌊</button>
+                    </div>
+                </div>
+
+                <!-- SEZIONE AVATAR COLORATI/MISTI -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-purple-600 mb-2 uppercase">🌈 Colorati/Tropicali:</h3>
+                    <div class="grid grid-cols-4 gap-2 bg-purple-50 border-2 border-purple-300 p-3">
+                        <button onclick="GameApp.selectAvatar('🐟')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-purple-500 transition-all" title="Pesce Giallo">🐟</button>
+                        <button onclick="GameApp.selectAvatar('🐠')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-purple-500 transition-all" title="Pesce Tropicale">🐠</button>
+                        <button onclick="GameApp.selectAvatar('🦑')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-purple-500 transition-all" title="Calamaro">🦑</button>
+                        <button onclick="GameApp.selectAvatar('🐙')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-purple-500 transition-all" title="Polpo">🐙</button>
+                    </div>
+                </div>
+
+                <!-- SEZIONE AVATAR SPECIALI/NUOVI -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-green-600 mb-2 uppercase">✨ Speciali:</h3>
+                    <div class="grid grid-cols-4 gap-2 bg-green-50 border-2 border-green-300 p-3">
+                        <button onclick="GameApp.selectAvatar('🪸')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-green-500 transition-all" title="Corallo">🪸</button>
+                        <button onclick="GameApp.selectAvatar('🐚')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-green-500 transition-all" title="Conchiglia">🐚</button>
+                        <button onclick="GameApp.selectAvatar('🪼')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-green-500 transition-all" title="Medusa">🪼</button>
+                        <button onclick="GameApp.selectAvatar('🐢')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-green-500 transition-all" title="Tartaruga Marina">🐢</button>
+                    </div>
+                </div>
+
+                <!-- SEZIONE AVATAR ULTERIORI NUOVI -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-yellow-600 mb-2 uppercase">⭐ Leggendari:</h3>
+                    <div class="grid grid-cols-4 gap-2 bg-yellow-50 border-2 border-yellow-300 p-3">
+                        <button onclick="GameApp.selectAvatar('🌟')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-yellow-500 transition-all" title="Stella Marina">🌟</button>
+                        <button onclick="GameApp.selectAvatar('🐴')" class="avatar-btn text-4xl p-3 border-2 border-transparent hover:border-yellow-500 transition-all" title="Cavalluccio Marino">🐴</button>
+                    </div>
+                </div>
+                
+                <!-- Avatar selezionato indicato qui -->
+                <div class="mt-4 text-center">
+                    <p class="text-lg font-bold text-[#0f3854] mb-2">Avatar Selezionato:</p>
+                    <div id="selected-avatar-display" class="text-6xl">👤</div>
+                </div>
+            </div>
+
+            <!-- Pulsante continua -->
+            <button onclick="GameApp.continueToCoralChoice()" class="pixel-btn btn-blue w-full text-2xl shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2">
+                <span>🌊</span> CONTINUA
+            </button>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 2.5: SCELTA CORALLO -->
+    <!-- Permette al giocatore di scegliere quale corallo salvare -->
+    <div id="screen-coral-choice" class="screen">
+        <div class="max-w-4xl w-full">
+            <!-- Titolo della missione -->
+            <h2 class="text-5xl text-[#ff8da1] mb-8 text-center" style="text-shadow: 3px 3px 0 #051b29;">QUAL CORALLO SALVARE?</h2>
+            
+            <!-- Griglia con 4 coralli selezionabili -->
+            <div class="grid grid-cols-2 md:grid-cols-2 gap-6 max-w-2xl mx-auto px-4">
+                <!-- Corallo 1: Rosso -->
+                <div onclick="GameApp.selectCoral('Rosso')" class="pixel-box p-6 cursor-pointer hover:scale-105 transition-transform group bg-[#fffbf0] border-4 border-[#ff6b6b]">
+                    <div class="text-7xl text-center mb-4 group-hover:scale-110 transition-transform">🪸</div>
+                    <h3 class="text-2xl font-bold text-center text-[#0f3854]">Corallo Rosso</h3>
+                    <p class="text-center text-sm text-gray-600 mt-2">Il Guardiano della Barriera</p>
+                </div>
+
+                <!-- Corallo 2: Blu -->
+                <div onclick="GameApp.selectCoral('Blu')" class="pixel-box p-6 cursor-pointer hover:scale-105 transition-transform group bg-[#fffbf0] border-4 border-[#4bc0c8]">
+                    <div class="text-7xl text-center mb-4 group-hover:scale-110 transition-transform">🪸</div>
+                    <h3 class="text-2xl font-bold text-center text-[#0f3854]">Corallo Blu</h3>
+                    <p class="text-center text-sm text-gray-600 mt-2">L'Abitante delle Profondità</p>
+                </div>
+
+                <!-- Corallo 3: Giallo -->
+                <div onclick="GameApp.selectCoral('Giallo')" class="pixel-box p-6 cursor-pointer hover:scale-105 transition-transform group bg-[#fffbf0] border-4 border-[#ffeb3b]">
+                    <div class="text-7xl text-center mb-4 group-hover:scale-110 transition-transform">🪸</div>
+                    <h3 class="text-2xl font-bold text-center text-[#0f3854]">Corallo Giallo</h3>
+                    <p class="text-center text-sm text-gray-600 mt-2">Il Danzatore della Luce</p>
+                </div>
+
+                <!-- Corallo 4: Viola -->
+                <div onclick="GameApp.selectCoral('Viola')" class="pixel-box p-6 cursor-pointer hover:scale-105 transition-transform group bg-[#fffbf0] border-4 border-[#b39ddb]">
+                    <div class="text-7xl text-center mb-4 group-hover:scale-110 transition-transform">🪸</div>
+                    <h3 class="text-2xl font-bold text-center text-[#0f3854]">Corallo Viola</h3>
+                    <p class="text-center text-sm text-gray-600 mt-2">Il Mistico del Reef</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 3: INTRODUZIONE NARRATIVA -->
+    <!-- Dialogo con Mastro Tuga che spiega le regole del gioco -->
+    <div id="screen-intro" class="screen">
+        <div class="pixel-box p-6 max-w-2xl w-full flex flex-col items-center gap-6 relative bg-[#fffbf0]">
+            <!-- Dialogo con personaggio NPC -->
+            <div class="flex items-start gap-4 w-full">
+                <!-- Sprite del personaggio Mastro Tuga -->
+                <div class="flex flex-col items-center">
+                    <div class="w-24 h-24 bg-[#1d6b87] border-4 border-[#051b29] flex items-center justify-center text-6xl float shadow-lg">🐢</div>
+                    <span class="bg-[#051b29] text-white px-2 -mt-3 text-sm z-10 border border-white">MASTRO TUGA</span>
+                </div>
+                <!-- Baloon di testo con messaggio -->
+                <div class="bg-white border-4 border-[#051b29] p-4 flex-1 relative shadow-sm">
+                    <!-- Punta della speech bubble -->
+                    <div class="absolute top-6 -left-4 w-5 h-5 bg-white border-l-4 border-b-4 border-[#051b29] transform rotate-45"></div>
+                    <!-- Avatar e nome giocatore -->
+                    <div class="flex items-center gap-2 mb-2">
+                        <span id="intro-player-avatar" class="text-3xl">👤</span>
+                        <p class="text-lg font-bold text-[#1d6b87]" id="intro-player-name">Esploratore</p>
+                    </div>
+                    <!-- Testo saluto -->
+                    <p class="text-2xl leading-none mb-2 text-[#1d6b87]">Benvenuto!</p>
+                    <p class="text-xl leading-tight">La missione ti attende. I nostri coralli stanno morendo... <br>Dobbiamo agire subito per salvarli! Partirai con 0% di salute e dovrai farlo guarire.</p>
+                </div>
+            </div>
+
+            <!-- NUOVO: Pannello con istruzioni aggiornate -->
+            <div class="bg-[#e0f7fa] border-4 border-[#1d6b87] p-4 w-full text-center">
+                <!-- Titolo missione -->
+                <p class="text-lg font-bold text-[#0f3854] mb-2 uppercase border-b-2 border-[#1d6b87] inline-block">NUOVE REGOLE</p>
+                
+                <!-- Spiegazione sistema bonus -->
+                <div class="my-4 p-3 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
+                    <p class="font-bold text-yellow-700 mb-2">🎮 SISTEMA BONUS:</p>
+                    <div class="flex justify-around items-center mb-3">
+                        <div class="flex flex-col items-center">
+                            <span class="text-3xl">🐚</span>
+                            <span class="text-xs">Jolly +EXP</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span class="text-3xl">🐠</span>
+                            <span class="text-xs">Jolly +EXP</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <span class="text-3xl">🦀</span>
+                            <span class="text-xs">Jolly +EXP</span>
+                        </div>
+                    </div>
+                    <p class="text-sm">I simboli 🐚 🐠 🦀 sono JOLLY!<br>Combinano con qualsiasi simbolo e danno EXP extra!</p>
+                </div>
+                
+                <!-- Icone risorse animate -->
+                <div class="flex justify-around items-center my-4">
+                    <div class="flex flex-col items-center animate-bounce delay-0">
+                        <span class="text-4xl">💧</span><span class="text-sm font-bold">ACQUA</span>
+                    </div>
+                    <div class="flex flex-col items-center animate-bounce" style="animation-delay: 0.1s;">
+                        <span class="text-4xl">🌿</span><span class="text-sm font-bold">CIBO</span>
+                    </div>
+                    <div class="flex flex-col items-center animate-bounce" style="animation-delay: 0.2s;">
+                        <span class="text-4xl">☀️</span><span class="text-sm font-bold">LUCE</span>
+                    </div>
+                </div>
+                
+                <!-- Testo istruzioni aggiornate -->
+                <p class="text-lg">
+                    <span class="text-red-500 font-bold">Parti da 0% salute!</span><br>
+                    Abbina simboli uguali per guarire il corallo.<br>
+                    Usa i <span class="text-yellow-600 font-bold">JOLLY 🐚🐠🦀</span> per match facili e EXP bonus!
+                </p>
+            </div>
+
+            <!-- Pulsante per iniziare il gioco -->
+            <button onclick="GameApp.goToMap()" class="pixel-btn btn-blue w-full text-2xl shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2">
+                <span>🌊</span> HO CAPITO, TUFFIAMOCI!
+            </button>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 4: MAPPA OCEANO -->
+    <!-- Selezione zone di gioco disponibili -->
+    <div id="screen-map" class="screen">
+        <!-- Titolo della mappa -->
+        <h2 class="text-5xl text-[#ff8da1] mb-8" style="text-shadow: 3px 3px 0 #051b29;">MAPPA OCEANO</h2>
+        
+        
+        <!-- Griglia zone giocabili (6 livelli in 2 colonne) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full px-4">
+            
+            <!-- LIVELLO 1: Barriera Solare (APERTO) -->
+            <div onclick="GameApp.enterZone(1)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-[#fffbf0]">
+                <div class="absolute top-2 right-2 text-red-500 animate-ping">❗</div>
+                <div class="text-5xl mb-2 text-center group-hover:scale-110 transition-transform">🏖️</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Barriera Solare</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 1</p>
+            </div>
+
+            <!-- LIVELLO 2: Foresta di Alghe -->
+            <div id="level-2" onclick="GameApp.enterZone(2)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-gray-300 opacity-60" style="pointer-events: none;">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <span class="text-6xl drop-shadow-md">🔒</span>
+                </div>
+                <div class="text-5xl mb-2 text-center">🌿</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Foresta di Alghe</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 2</p>
+            </div>
+
+            <!-- LIVELLO 3: Caverna dei Cristalli -->
+            <div id="level-3" onclick="GameApp.enterZone(3)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-gray-300 opacity-60" style="pointer-events: none;">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <span class="text-6xl drop-shadow-md">🔒</span>
+                </div>
+                <div class="text-5xl mb-2 text-center">💎</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Caverna dei Cristalli</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 3</p>
+            </div>
+
+            <!-- LIVELLO 4: Abisso Oscuro -->
+            <div id="level-4" onclick="GameApp.enterZone(4)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-gray-300 opacity-60" style="pointer-events: none;">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <span class="text-6xl drop-shadow-md">🔒</span>
+                </div>
+                <div class="text-5xl mb-2 text-center">🌑</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Abisso Oscuro</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 4</p>
+            </div>
+
+            <!-- LIVELLO 5: Giardino di Coralli -->
+            <div id="level-5" onclick="GameApp.enterZone(5)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-gray-300 opacity-60" style="pointer-events: none;">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <span class="text-6xl drop-shadow-md">🔒</span>
+                </div>
+                <div class="text-5xl mb-2 text-center">🪸</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Giardino di Coralli</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 5</p>
+            </div>
+
+            <!-- LIVELLO 6: Oasi Finale -->
+            <div id="level-6" onclick="GameApp.enterZone(6)" class="pixel-box p-4 cursor-pointer hover:scale-105 transition-transform group relative overflow-hidden bg-gray-300 opacity-60" style="pointer-events: none;">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <span class="text-6xl drop-shadow-md">🔒</span>
+                </div>
+                <div class="text-5xl mb-2 text-center">✨</div>
+                <h3 class="text-3xl font-bold text-center text-[#0f3854]">Oasi Finale</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Livello 6</p>
+            </div>
+        </div>
+        <!-- Pulsante per tornare al menu principale -->
+        <button onclick="GameApp.showScreen('hero')" class="mt-8 pixel-btn btn-blue text-lg py-2">Indietro</button>
+    </div>
+
+    <!-- SCHERMATA 5: GIOCO (MATCH-3 + CURA CORALLO) -->
+    <!-- Schermata principale di gioco con griglia puzzle e pannello cura -->
+    <div id="screen-game" class="screen justify-start pt-4">
+        <!-- Barra superiore com titolo zona, livello, mosse e botone esci -->
+        <div class="w-full max-w-4xl flex justify-between items-center mb-4 px-2 gap-2">
+            <!-- Titolo zona corrente -->
+            <div class="bg-[#051b29] text-white px-4 py-1 border-2 border-white">
+                <span id="zone-title" class="text-xl">Barriera Solare</span>
+            </div>
+            <!-- Indicatore livello -->
+            <div class="bg-[#d4a574] text-[#051b29] px-4 py-1 border-2 border-white font-bold">
+                Liv: <span id="level-indicator">1</span>/6
+            </div>
+            <!-- Contatore mosse rimaste -->
+            <div class="bg-[#1d6b87] text-white px-4 py-1 border-2 border-white font-bold" id="moves-container">
+                Mosse: <span id="moves-remaining">18</span>
+            </div>
+            <!-- Pulsante uscita -->
+            <button onclick="GameApp.goToMap()" class="bg-red-500 border-2 border-white text-white px-3 py-1 font-bold text-lg hover:bg-red-600 shadow-[2px_2px_0_0_rgba(0,0,0,0.5)]">ESCI ✕</button>
+        </div>
+
+        <!-- NUOVO: Game stats -->
+        <div class="game-stats max-w-4xl mx-auto mb-4">
+            <div class="stat-item">
+                <div class="stat-value" id="exp-value">0</div>
+                <div class="stat-label">EXP</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="bonus-match-count">0</div>
+                <div class="stat-label">Bonus Match</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="target-health-display">50%</div>
+                <div class="stat-label">Obiettivo</div>
+            </div>
+        </div>
+
+        <!-- Layout principale: griglia a sinistra, pannello corallo a destra -->
+        <div class="game-layout flex w-full max-w-4xl gap-6 items-start justify-center">
+            <!-- SEZIONE SINISTRA: Griglia Puzzle Match-3 -->
+            <div class="flex-1 w-full max-w-sm">
+                <!-- Box contenitore griglia -->
+                <div class="pixel-box p-3 bg-[#1d6b87] border-4 border-[#e6d6ac]">
+                    <!-- Griglia 6x6 con celle cliccabili -->
+                    <div id="game-grid" class="game-grid"></div>
+                </div>
+                <!-- NUOVO: Legenda simboli -->
+                <div class="mt-4 text-center text-sm bg-[#e0f7fa] p-2 border-2 border-[#051b29]">
+                    <p class="font-bold mb-1">🎮 SIMBOLI JOLLY:</p>
+                    <div class="flex justify-center gap-4">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xl">🐚</span><span class="text-xs">Jolly +EXP</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xl">🐠</span><span class="text-xs">Jolly +EXP</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xl">🦀</span><span class="text-xs">Jolly +EXP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEZIONE DESTRA: Dashboard Corallo + Strumenti -->
+            <div class="flex-1 w-full max-w-sm flex flex-col gap-4">
+                <!-- Pannello Monitoraggio Salute Corallo -->
+                <div class="pixel-box p-4 flex flex-col items-center transition-colors duration-1000 bg-[#e0f7fa]" id="coral-monitor">
+                    <!-- Titolo pannello -->
+                    <h4 class="text-2xl font-bold text-[#0f3854] mb-2 border-b-2 border-[#051b29] w-full text-center">PAZIENTE</h4>
+                    <!-- Sprite corallo con emotion -->
+                    <div class="relative w-32 h-32 flex items-center justify-center mb-2">
+                        <!-- Immagine corallo con filtri dinamici -->
+                        <div id="coral-sprite" class="text-8xl float transition-all duration-700 grayscale filter drop-shadow-xl coral-critical">🪸</div>
+                        <!-- Emoji emozione dinamica -->
+                        <div id="coral-emotion" class="absolute -top-2 -right-2 bg-white border-2 border-black rounded-full w-10 h-10 flex items-center justify-center text-xl animate-bounce">😵</div>
+                    </div>
+                    
+                    <!-- Barra salute (health bar) -->
+                    <div class="w-full bg-[#051b29] p-1 border-2 border-white mb-2">
+                        <div id="health-fill" style="height: 16px; background: #e74c3c; width: 0%; transition: width 0.5s ease, background-color 0.5s ease;"></div>
+                    </div>
+                    
+                    <!-- NUOVO: Display EXP e obiettivo -->
+                    <div id="exp-display" class="mt-2 text-center w-full">
+                        <div class="text-sm font-bold text-yellow-600">
+                            EXP: <span id="exp-value-display">0</span> | Bonus: <span id="bonus-match-display">0</span>
+                        </div>
+                        <div class="target-health-display">
+                            Obiettivo: <span id="target-health">50</span>% salute
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pannello Bonus Strumenti -->
+                <div class="pixel-box p-3 bg-[#e6d6ac]">
+                    <!-- NUOVO: Pannello risorse base -->
+                    <h4 class="text-xl border-b-2 border-[#051b29] pb-1 mb-2 mt-4 font-bold text-[#051b29] text-center">RISORSE BASE</h4>
+                    <div class="space-y-2">
+                        <!-- Acqua -->
+                        <div class="flex items-center justify-between bg-white border-2 border-[#1d6b87] p-2">
+                            <span class="text-3xl">💧</span>
+                            <div class="text-center"><div class="font-bold leading-none">ACQUA</div><div class="text-xs">+15 HP</div></div>
+                            <div class="flex items-center gap-1">
+                                <span class="font-bold text-xl text-blue-600 w-6 text-right" id="res-water">0</span>
+                                <button onclick="GameApp.useTool('water')" class="bg-[#64b5f6] text-white border-2 border-black px-2 hover:translate-y-px text-sm" id="btn-water" disabled>USA (3)</button>
+                            </div>
+                        </div>
+                        <!-- Alghe -->
+                        <div class="flex items-center justify-between bg-white border-2 border-[#2e7d32] p-2">
+                            <span class="text-3xl">🌿</span>
+                            <div class="text-center"><div class="font-bold leading-none">ALGHE</div><div class="text-xs">+20 HP</div></div>
+                            <div class="flex items-center gap-1">
+                                <span class="font-bold text-xl text-green-600 w-6 text-right" id="res-algae">0</span>
+                                <button onclick="GameApp.useTool('algae')" class="bg-[#81c784] text-white border-2 border-black px-2 hover:translate-y-px text-sm" id="btn-algae" disabled>USA (3)</button>
+                            </div>
+                        </div>
+                        <!-- Sole -->
+                        <div class="flex items-center justify-between bg-white border-2 border-[#ff9800] p-2">
+                            <span class="text-3xl">☀️</span>
+                            <div class="text-center"><div class="font-bold leading-none">SOLE</div><div class="text-xs">+25 HP</div></div>
+                            <div class="flex items-center gap-1">
+                                <span class="font-bold text-xl text-yellow-600 w-6 text-right" id="res-sun">0</span>
+                                <button onclick="GameApp.useTool('sun')" class="bg-[#ffb74d] text-white border-2 border-black px-2 hover:translate-y-px text-sm" id="btn-sun" disabled>USA (3)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 6: VITTORIA -->
+    <!-- Schermata finale quando il corallo viene salvato -->
+    <div id="screen-win" class="screen bg-black bg-opacity-90">
+        <!-- Pannello vittoria -->
+        <div class="pixel-box p-8 max-w-lg w-full text-center border-4 border-green-500 shadow-[0_0_50px_rgba(46,204,113,0.5)] bg-[#fffbf0]">
+            <!-- Titolo vittoria -->
+            <h2 class="text-green-500 text-6xl mb-4" style="text-shadow: 2px 2px 0 black;">VITTORIA!</h2>
+            
+            <!-- Animazione celebrazione -->
+            <div class="text-8xl mb-6 animate-bounce">✨🪸✨</div>
+            
+            <!-- Testo risultato -->
+            <p class="text-2xl font-bold text-[#0f3854] mb-6">Barriera Salvata!</p>
+            
+            <!-- Statistiche vittoria -->
+            <div class="bg-blue-50 border-2 border-blue-300 p-4 rounded-lg mb-6">
+                <p class="font-bold text-blue-700 mb-3 border-b-2 border-blue-300 pb-2">📊 STATISTICHE</p>
+                <div class="grid grid-cols-2 gap-3 text-sm text-[#0f3854]">
+                    <div class="text-left font-bold">EXP Totali:</div>
+                    <div class="text-right font-bold text-yellow-600" id="victory-exp">0</div>
+                    
+                    <div class="text-left font-bold">Bonus Match:</div>
+                    <div class="text-right font-bold text-orange-600" id="victory-bonus-matches">0</div>
+                    
+                    <div class="text-left font-bold">Mosse Usate:</div>
+                    <div class="text-right font-bold text-blue-600" id="victory-moves">0</div>
+                </div>
+            </div>
+            
+            <!-- Pulsante ritorno mappa -->
+            <button onclick="GameApp.returnToMapAfterWin()" class="pixel-btn btn-blue text-2xl w-full hover:scale-105 transition-transform">🌊 CONTINUA ALLA MAPPA</button>
+        </div>
+    </div>
+
+    <!-- SCHERMATA 7: IMPOSTAZIONI -->
+    <!-- Menu impostazioni per audio, musica e tema notturno -->
+    <div id="screen-settings" class="screen">
+        <!-- Titolo impostazioni -->
+        <h2 class="text-5xl text-[#ff8da1] mb-8" style="text-shadow: 3px 3px 0 #051b29;">⚙️ IMPOSTAZIONI</h2>
+        
+        <!-- Pannello principale impostazioni -->
+        <div class="pixel-box p-8 max-w-2xl w-full bg-[#e0f7fa] border-4 border-[#051b29]">
+            
+            <!-- SEZIONE AUDIO EFFETTI -->
+            <div class="mb-8 pb-6 border-b-4 border-[#051b29]">
+                <h3 class="text-3xl font-bold text-[#0f3854] mb-4">🔊 Effetti Sonori</h3>
+                <p class="text-lg text-[#0f3854] mb-4">Attiva/disattiva suoni pulsanti e azioni:</p>
+                <button onclick="GameApp.toggleAudio()" class="pixel-btn btn-blue text-xl w-full">
+                    <span id="audio-status">🔊 ATTIVO</span>
+                </button>
+            </div>
+
+            <!-- SEZIONE MUSICA DI SOTTOFONDO -->
+            <div class="mb-8 pb-6 border-b-4 border-[#051b29]">
+                <h3 class="text-3xl font-bold text-[#0f3854] mb-4">🎵 Musica Ambiente</h3>
+                <p class="text-lg text-[#0f3854] mb-4">Attiva/disattiva musica cosy di sottofondo:</p>
+                <button onclick="GameApp.toggleMusic()" class="pixel-btn btn-blue text-xl w-full">
+                    <span id="music-status">🎵 ATTIVA</span>
+                </button>
+            </div>
+
+            <!-- SEZIONE MODALITÀ NOTTURNA -->
+            <div class="mb-8 pb-6 border-b-4 border-[#051b29]">
+                <h3 class="text-3xl font-bold text-[#0f3854] mb-4">🌙 Modalità Notturna</h3>
+                <p class="text-lg text-[#0f3854] mb-4">Tema colori scuri per gli occhi stanchi:</p>
+                <button onclick="GameApp.toggleNightMode()" class="pixel-btn btn-blue text-xl w-full">
+                    <span id="nightmode-status">🌙 DISATTIVA</span>
+                </button>
+            </div>
+
+            <!-- NUOVA SEZIONE: RESET PROGRESSO -->
+            <div class="mb-8 pb-6 border-b-4 border-[#051b29]">
+                <h3 class="text-3xl font-bold text-[#0f3854] mb-4">🔄 Reset Progresso</h3>
+                <p class="text-lg text-[#0f3854] mb-4">Ricomincia il gioco da capo:</p>
+                <button onclick="resetGameProgress()" class="pixel-btn btn-red text-xl w-full" id="reset-btn">
+                    🔄 RESET GIOCO
+                </button>
+                <p class="text-sm text-gray-600 mt-2 text-center">Attenzione: questa azione cancellerà tutti i tuoi progressi!</p>
+            </div>
+
+            <!-- Pulsante indietro -->
+            <button onclick="GameApp.showScreen('hero')" class="pixel-btn btn-blue text-2xl w-full mt-4">← INDIETRO</button>
+        </div>
+    </div>
+
+    <!-- PULSANTI SCORRIMENTO PAGINA -->
+    <!-- Pulsanti per scrollare su e giù la pagina -->
+    <div id="scroll-controls" class="scroll-controls">
+        <button onclick="GameApp.scrollUp()" class="scroll-btn scroll-up" title="Scorri verso l'alto">▲</button>
+        <button onclick="GameApp.scrollDown()" class="scroll-btn scroll-down" title="Scorri verso il basso">▼</button>
+    </div>
+
+    <!-- CARICAMENTO SCRIPT PRINCIPALE -->
+    <!-- Importa la logica di gioco principale da script.js -->
+    <script src="script.js"></script>
+    
+    <!-- SCRIPT PER RESET GIOCO -->
+    <script>
+        function resetGameProgress() {
+            if (confirm("Sei sicuro di voler resettare tutto il progresso?\nTutti i livelli sbloccati verranno persi!")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        // Aggiorna schermata vittoria con statistiche
+        document.addEventListener('DOMContentLoaded', function() {
+            // Intercetta showScreen per aggiornare vittoria
+            const originalShowScreen = GameApp.showScreen;
+            GameApp.showScreen = function(screenId) {
+                originalShowScreen.call(this, screenId);
+                
+                if (screenId === 'win') {
+                    // Aggiorna statistiche vittoria dopo un breve delay
+                    setTimeout(() => {
+                        // Queste variabili devono essere accessibili dallo scope di GameApp
+                        // Potrebbe essere necessario aggiungere getter alle statistiche
+                        document.getElementById('victory-shell')?.textContent = GameApp.getBonusCount?.('shell') || 0;
+                        document.getElementById('victory-fish1')?.textContent = GameApp.getBonusCount?.('fish1') || 0;
+                        document.getElementById('victory-crab')?.textContent = GameApp.getBonusCount?.('crab') || 0;
+                        document.getElementById('final-health')?.textContent = GameApp.getHealth?.() || '100';
+                        document.getElementById('victory-exp')?.textContent = GameApp.getExp?.() || 0;
+                        document.getElementById('victory-bonus-matches')?.textContent = GameApp.getBonusMatches?.() || 0;
+                        document.getElementById('victory-moves')?.textContent = GameApp.getMoveCount?.() || 0;
+                    }, 100);
+                }
+            };
+        });
+    </script>
+</body>
+</html>
