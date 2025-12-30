@@ -1,0 +1,416 @@
+/* ====================================== */
+/* CORAL RESCUE: MISSIONE OASI            */
+/* Stili Interfaccia Utente (UI)         */
+/* ====================================== */
+
+/* --- VARIABILI GLOBALI (CSS CUSTOM PROPERTIES) --- */
+/* Definisce tutti i colori usati nel gioco per facile manutenzione */
+:root {
+    --bg-deep: #0f3854;         /* Blu scuro di sfondo principale */
+    --bg-water: #1d6b87;        /* Blu acqua per container */
+    --sand: #e6d6ac;            /* Beige sabbia */
+    --coral-healthy: #ff8da1;   /* Rosa corallo sano */
+    --ui-panel: #fffbf0;        /* Bianco/crema per pannelli */
+    --outline: #051b29;         /* Nero/blu scuro per bordi */
+}
+
+/* --- SETUP BASE PAGINA --- */
+/* Stili base applicati a tutta la pagina */
+body {
+    /* Font monospace pixelato per effetto retro */
+    font-family: 'VT323', monospace;
+    /* Colore sfondo principale */
+    background-color: var(--bg-deep);
+    /* Colore testo predefinito */
+    color: var(--outline);
+    /* Abilita scrolling verticale */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Previene selezione accidentale testo durante gioco */
+    user-select: none;
+    /* Altezza completa */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Smooth scrolling animato */
+    scroll-behavior: smooth;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* --- SFONDO ANIMATO OCEANICO --- */
+/* Sfondo fisso con griglia e gradiente */
+.ocean-bg {
+    /* Posizionamento fisso dietro tutto */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Griglia puntini + gradiente blu sfumato */
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 2px, transparent 2.5px),
+        linear-gradient(to bottom, #2b8a9e 0%, #0f3854 100%);
+    background-size: 20px 20px, 100% 100%;
+    /* Dietro tutti gli elementi */
+    z-index: -2;
+}
+
+/* --- ANIMAZIONE BOLLE RISALITA --- */
+/* Stile bolle che salgono animate */
+.bubble {
+    /* Posizionamento assoluto sopra lo sfondo */
+    position: absolute;
+    /* Colore trasparente bianco */
+    background: rgba(255, 255, 255, 0.2);
+    /* Bordo trasparente bianco */
+    border: 2px solid rgba(255,255,255,0.4);
+    /* Dimensione rotonda della bolla */
+    width: 10px; height: 10px;
+    /* Inizia sotto lo schermo */
+    bottom: -50px;
+    /* Usa animazione rise con timing linear */
+    animation: rise linear infinite;
+    /* Rendering pixelato */
+    image-rendering: pixelated;
+}
+/* Keyframes animazione risalita bolle */
+@keyframes rise {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }          /* Invisibile inizio */
+    20% { opacity: 0.8; }                                              /* Appare */
+    50% { transform: translateY(-60vh) translateX(20px); }             /* Risale + movimento laterale */
+    100% { transform: translateY(-120vh) translateX(-20px); opacity: 0; } /* Esce schermo invisibile */
+}
+
+/* --- COMPONENTI UI PIXEL ART --- */
+
+/* Contenitori generici con stile pixel art */
+.pixel-box {
+    /* Colore sfondo chiaro */
+    background-color: var(--ui-panel);
+    /* Posizionamento relativo per overflow */
+    position: relative;
+    /* Bordo spesso e nero */
+    border: 4px solid var(--outline);
+    /* Ombra grande per effetto 3D */
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+    /* Rendering pixel art */
+    image-rendering: pixelated;
+}
+
+/* --- CONTROLLI SCORRIMENTO PAGINA --- */
+/* Pulsanti per scrollare su e giù */
+.scroll-controls {
+    /* Posizionamento fisso a destra dello schermo */
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    /* Impilamento verticale */
+    display: flex;
+    flex-direction: column;
+    /* Spazio tra pulsanti */
+    gap: 10px;
+    /* Strato superiore */
+    z-index: 100;
+}
+
+/* Stile singolo pulsante scorrimento */
+.scroll-btn {
+    /* Dimensioni pulsante */
+    width: 50px;
+    height: 50px;
+    /* Stile pixel art */
+    border: 3px solid var(--outline);
+    background-color: var(--sand);
+    color: var(--outline);
+    /* Font grande per freccia */
+    font-size: 24px;
+    font-weight: bold;
+    /* Cursor pointer */
+    cursor: pointer;
+    /* Transizioni morbide */
+    transition: all 0.2s ease;
+    /* Ombra per effetto 3D */
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    /* Remove default styles */
+    padding: 0;
+}
+
+/* Effetto hover su pulsante scorrimento */
+.scroll-btn:hover {
+    /* Ingrandisci lievemente */
+    transform: scale(1.1);
+    /* Colore più scuro */
+    background-color: var(--bg-water);
+    /* Testo bianco */
+    color: white;
+    /* Ombra più grande */
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
+}
+
+/* Effetto attivo su pulsante scorrimento */
+.scroll-btn:active {
+    /* Sposta giù per effetto click */
+    transform: translate(2px, 2px);
+    /* Ombra ridotta */
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+/* Nascondi pulsanti quando non serve scorrimento */
+.scroll-btn.hidden {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* --- CORNICE SCENA INTRODUTTIVA --- */
+/* Contenitore visuals intro menu */
+.hero-scene-frame {
+    /* Dimensioni fisse */
+    width: 280px;
+    height: 180px;
+    /* Sfondo blu acqua */
+    background-color: var(--bg-water);
+    /* Bordo e ombra per effetto 3D doppio */
+    border: 4px solid white;
+    box-shadow: 
+        0 0 0 4px var(--outline),  /* Bordo nero esterno */
+        10px 10px 0 0 rgba(0,0,0,0.4); /* Ombra profonda */
+    /* Centra nel contenitore genitore */
+    margin: 0 auto;
+    /* Overflow hidden per bordi puliti */
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- DECORAZIONI SCENA INTRO --- */
+/* Sabbia in basso della scena */
+.scene-sand {
+    /* Posizionato in basso */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    /* Colore sabbia */
+    background-color: var(--sand);
+    /* Bordo superiore */
+    border-top: 4px solid var(--outline);
+}
+/* Raggi sole decorativi (striped pattern) */
+.scene-sun-rays {
+    /* Copre tutto il frame */
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Pattern diagonale */
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 20%, transparent 20%, transparent 80%, rgba(255,255,255,0.1) 80%);
+    /* Non riceve click */
+    pointer-events: none;
+}
+
+/* --- PULSANTI CUSTOM PIXEL STYLE --- */
+/* Stile pulsante principale */
+.pixel-btn {
+    /* Colore giallo per pulsanti principali */
+    background-color: #ffcc00;
+    /* Testo nero */
+    color: var(--outline);
+    /* Bordo spesso */
+    border: 4px solid var(--outline);
+    /* Padding generoso */
+    padding: 15px 30px;
+    /* Font pixelato */
+    font-family: 'VT323', monospace;
+    /* Testo grande */
+    font-size: 2rem;
+    /* Maiuscole */
+    text-transform: uppercase;
+    /* Cursore puntatore */
+    cursor: pointer;
+    /* Ombra 3D: inset light/dark + drop shadow */
+    box-shadow: 
+        inset 4px 4px 0 rgba(255,255,255,0.5),   /* Highlights */
+        inset -4px -4px 0 rgba(0,0,0,0.2),       /* Shadows */
+        6px 6px 0 rgba(0,0,0,0.4);               /* Drop shadow */
+    /* Transizione rapida per interazione */
+    transition: transform 0.1s;
+}
+/* Hover effect: solleva pulsante */
+.pixel-btn:hover { 
+    transform: translateY(-2px); 
+    /* Giallo più brillante */
+    background-color: #ffdb4d; 
+}
+/* Active state: spinge pulsante verso il basso */
+.pixel-btn:active { 
+    transform: translateY(4px); 
+    /* Rimuove ombra per effetto "pressed" */
+    box-shadow: none; 
+}
+
+/* Varianti colore pulsante */
+.btn-blue { background-color: #4bc0c8; color: white; }  /* Blu acqua */
+.btn-red { background-color: #ff6b6b; color: white; }   /* Rosso errore */
+
+/* --- AVATAR SELECTOR --- */
+/* Bottoni avatar nella schermata profilo */
+.avatar-btn {
+    /* Background trasparente */
+    background-color: transparent;
+    /* Nessun bordo predefinito */
+    border: none;
+    /* Cursore pointer */
+    cursor: pointer;
+    /* Padding generoso */
+    padding: 0;
+}
+/* Quando selezionato (border blu) */
+.avatar-btn.selected {
+    /* Bordo visibile */
+    border: 3px solid #1d6b87 !important;
+    /* Leggero sfondo */
+    background-color: rgba(29, 107, 135, 0.2);
+}
+
+/* --- TIPOGRAFIA TITOLI --- */
+/* Titolo principale super grande */
+.super-title {
+    /* Testo enorme */
+    font-size: 5rem;
+    /* Spaziatura linea ridotta */
+    line-height: 0.9;
+    /* Colore rosa corallo */
+    color: var(--coral-healthy);
+    /* Maiuscole */
+    text-transform: uppercase;
+    /* Ombra testo complessa per effetto 3D */
+    text-shadow: 
+        4px 4px 0 #051b29,           /* Ombra nera */
+        -2px -2px 0 white,           /* Highlight bianco */
+        -2px 2px 0 white,
+        2px -2px 0 white,
+        2px 2px 0 white,
+        8px 8px 0 rgba(0,0,0,0.4);  /* Ombra profonda */
+    /* Lieve rotazione per dinamismo */
+    transform: rotate(-3deg);
+    margin-bottom: 20px;
+}
+
+/* --- GRIGLIA DI GIOCO MATCH-3 --- */
+/* Contenitore griglia 6x6 */
+.game-grid {
+    /* CSS Grid 6 colonne */
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    /* Piccolo gap tra celle */
+    gap: 2px;
+    /* Colore sfondo spazi vuoti tra celle */
+    background-color: var(--outline);
+    /* Padding interno */
+    padding: 4px;
+    /* Bordo spesso */
+    border: 4px solid var(--sand);
+    /* Larghezza piena container */
+    width: 100%;
+    /* Max width per responsività */
+    max-width: 350px;
+    /* Mantieni rapporto quadrato */
+    aspect-ratio: 1;
+    /* Centra nella pagina */
+    margin: 0 auto;
+}
+
+/* --- SINGOLA CELLA DELLA GRIGLIA --- */
+.cell {
+    /* Sfondo trasparente blu */
+    background-color: rgba(255,255,255,0.1);
+    /* Centra contenuto (emoji) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Emoji grande */
+    font-size: 2rem;
+    /* Cursore puntatore */
+    cursor: pointer;
+    /* Transizione smooth per scaling */
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Hover: ingrandisci e illumina */
+.cell:hover { 
+    background-color: rgba(255,255,255,0.2); 
+    transform: scale(1.05); 
+}
+/* Cella selezionata: giallo fluorescente inset */
+.cell.selected {
+    background-color: rgba(255,255,255,0.4);
+    box-shadow: inset 0 0 0 4px #ffff00;
+}
+
+/* --- ANIMAZIONI GIOCO MATCH-3 --- */
+/* Animazione quando cella viene matchata */
+.match-anim { 
+    animation: popOut 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+}
+/* Keyframes scomparsa cella: scaling e fade */
+@keyframes popOut { 
+    0% { transform: scale(1); }           /* Inizio normale */
+    40% { transform: scale(1.15); }       /* Espandi un po' */
+    100% { transform: scale(0); opacity: 0; } /* Scompari */
+}
+
+/* --- GESTIONE SCHERMATE (Visibility Toggle) --- */
+/* Tutte le schermate nascosti di default */
+.screen { 
+    display: none;               /* Hidden */
+    flex-direction: column;      /* Layout flex verticale */
+    align-items: center;         /* Centra orizzontalmente */
+    justify-content: center;     /* Centra verticalmente */
+    min-height: 100vh;           /* Piena altezza viewport */
+    padding: 20px;               /* Padding interno */
+    position: relative;          /* Per z-index */
+    z-index: 10;                 /* Sopra sfondo */
+}
+/* Solo schermata con classe .active è visibile */
+.screen.active { display: flex; }
+
+/* --- ANIMAZIONI GENERICHE --- */
+/* Animazione lampeggio per elementi */
+.blink { animation: blink 1.5s infinite; }
+@keyframes blink { 
+    0%, 100% { opacity: 1; }    /* Visibile */
+    50% { opacity: 0.5; }        /* Semi-trasparente */
+}
+
+/* Animazione galleggiamento (float) */
+.float { animation: float 3s ease-in-out infinite; }
+@keyframes float { 
+    0%, 100% { transform: translateY(0); }        /* Posizione normale */
+    50% { transform: translateY(-8px); }          /* Solleva leggermente */
+}
+
+/* --- RESPONSIVE DESIGN --- */
+/* Per schermi piccoli (tablet/mobile) */
+@media (max-width: 600px) {
+    /* Titolo più piccolo su mobile */
+    .super-title {
+        font-size: 3rem;
+    }
+    /* Griglia della UI responsive */
+    .pixel-box {
+        border: 2px solid var(--outline);
+        box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+    }
+}
+
+/* --- PROPRIETÀ AGGIUNTIVE --- */
+/* Testo ombra leggera */
+.text-shadow-sm {
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+/* Elemento di processing (durante animazioni) */
+.processing {
+    cursor: wait;
+    opacity: 0.8;
+}
