@@ -112,7 +112,7 @@ const GameApp = (function() {
         // URL dei file audio (Pixabay - gratuiti e royalty-free)
         sounds: {
             // Il suono arcade-ui che hai fornito
-            buttonClick: 'https://pixabay.com/it/sound-effects/casual-click-pop-ui-1-262118/',
+            buttonClick: 'assets/casual-click-pop-ui-1-262118.mp3',
             // Musica ambiente cozy ocean
             ambientMusic: 'https://pixabay.com/it/music/cozy-ocean-ambient-background-music-11895/', //https://pixabay.com/it/sound-effects/beach-waves-splashing-ambience-389186/
             // Suono di match/raccolta
